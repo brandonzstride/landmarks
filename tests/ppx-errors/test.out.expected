@@ -22,4 +22,14 @@ Line 3, characters 2-24:
 3 |   let[@landmark] _ = 2+2 in ();;
       ^^^^^^^^^^^^^^^^^^^^^^
 Error: ppx_landmark: this landmark annotation requires a name argument
+Line 16, characters 35-76:
+16 | let[@landmark] optM (module X : S) ?m:((module M) : (module S) = (module X)) x =
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error: ppx_landmark: cannot support a module optional argument with a default
+       value
+Line 8, characters 57-58:
+8 | let[@landmark] shadow ((module M) : (module S)) ((module M) : (module S)) =
+                                                             ^
+Error: ppx_landmark: cannot unpack a module with the same name as another
+       unpacked module
 
