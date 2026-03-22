@@ -20,8 +20,7 @@ module type S = sig
   type 'a t
   val a : int
   val return : 'a -> 'a t
-  val ( let* ) : 'a t -> ('a -> 'b t) -> 'b t
-end
+end;;
 
 (* Module arguments must be unpacked in case they are for modular explicits,
   and hence we must keep around all type annotations. But annotations on
@@ -34,6 +33,11 @@ let[@landmark] optM (module X : S) ?m:((module M) : (module S) = (module X)) x =
   and this library does not yet enforce 5.5. *)
 (* let[@landmark] optM' (module X : S) ?m:((module M : S) = (module X : S)) x =
   x;; *)
+
+(* This is a type error, not a landmarks error. Landmarks should not cover up
+  the problem. *)
+let[@landmark] optM'' (module X : S) ?m:((module M) : (module S)) x =
+  x;;
 
 (* Since module names are kept during unpacking, shadowing is an error. *)
 let[@landmark] shadow ((module M) : (module S)) ((module M) : (module S)) =

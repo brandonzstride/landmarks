@@ -240,7 +240,7 @@ let rec arity {pexp_desc; _} =
           | Optional _ -> error param.pparam_loc `Poly_optional_arg
           | _ -> Param_val { label ; poly_annot = Some typ } :: acc
           end
-      | Pparam_val (label, _, { ppat_desc = Ppat_constraint (
+      | Pparam_val (label, default, { ppat_desc = Ppat_constraint (
           ({ ppat_desc = Ppat_unpack _ ; _ } as unpack),
           ({ ptyp_desc = Ptyp_package _ ; _ } as ptyp)
         ) ; _ }) ->
@@ -254,8 +254,8 @@ let rec arity {pexp_desc; _} =
             work as module-dependent functions. However, because of type
             constraints, we cannot handle optional module arguments for the same
             reason we cannot handle them with polymorphic parameters. *)
-          begin match label with
-          | Optional _ -> error param.pparam_loc `Module_optional_arg
+          begin match label, default with
+          | Optional _, Some _ -> error param.pparam_loc `Module_optional_arg
           | _ -> Param_module { label ; unpack ; ptyp = Some ptyp } :: acc
           end
       | Pparam_val (label, _, ({ ppat_desc = Ppat_unpack _ ; _ } as unpack)) ->

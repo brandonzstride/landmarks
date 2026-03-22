@@ -112,6 +112,21 @@ let opt2
   : (module X : S) -> ?_m:(module S) -> 'a -> 'a
   = fun (module X) ?(_m: (module S) option) x -> x
 
+(* and any module optional argument that does not unpack *)
+module O : sig
+  [@@@warning "-32"]
+  val f : ?m:(module S) -> int -> int
+  val f' : (module S) -> ?m:(module S) -> int -> int
+end = struct
+  (* ?m is a module and is allowed *)
+  let f ?m x =
+    match m with
+    | Some (m : (module S)) -> let module M = (val m) in M.a + x
+    | None -> x
+
+  let f' (n : (module S)) ?(m=n) x = let module M = (val m) in M.a + x
+end
+
 let opt3 (module X : S) ?(_m : (module S) option) x = x
 
 let opt4 : ?_m:int -> 'a -> 'a = fun ?(_m : int option) x -> x
