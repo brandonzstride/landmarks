@@ -385,10 +385,10 @@ let translate_value_bindings ctx value_binding auto vbs =
             vb) vbs_arity_name
   in
   let new_vbs = filter_map (function
-      | ({pvb_constraint;_}, Some (_ :: _ as arity, fun_name, landmark_name, loc, _)) ->
+      | ({pvb_constraint;_}, Some (_ :: _ as arity, fun_name, landmark_name, loc, attrs)) ->
           let ident = Exp.ident (mknoloc (Lident fun_name)) in
           let expr = eta_expand (wrap_landmark ctx landmark_name loc) ident arity in
-          Some (Vb.mk ?value_constraint:pvb_constraint (Pat.var (mknoloc fun_name)) expr)
+          Some (Vb.mk ~attrs ?value_constraint:pvb_constraint (Pat.var (mknoloc fun_name)) expr)
       | _ -> None) vbs_arity_name
   in
   vbs, new_vbs
